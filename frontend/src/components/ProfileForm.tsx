@@ -244,6 +244,8 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({
     if (Object.keys(validationErrors).length === 0) {
       onSave(formData);
     }
+
+    setFormData(DEFAULT_FORM_DATA);
   };
 
   const handleClear = () => {
