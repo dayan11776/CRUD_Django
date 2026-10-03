@@ -1,0 +1,7 @@
+{
+  "name": "ProfileCraft - User Profile Management",
+  "description": "A clean, modern, and responsive user profile management dashboard with interactive image preview, validation, and profile directory.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
