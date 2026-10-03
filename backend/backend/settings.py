@@ -26,7 +26,11 @@ SECRET_KEY = 'django-insecure-gq5id1xlf^&j%t@_)w7m7yy=1fw&*tz$^*fe@9&z!og*a*d1!n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "crud-django-1-hsld.onrender.com",
+]
 render_hostname = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if render_hostname:
     ALLOWED_HOSTS.append(render_hostname)

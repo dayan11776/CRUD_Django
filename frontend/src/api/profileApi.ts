@@ -1,7 +1,7 @@
 import { ProfileFormData, UserProfile } from "../types/profile";
-
-const API_URL = "/api/profiles/";
-const BACKEND_BASE_URL = "http://127.0.0.1:8000";
+// const BACKEND_BASE_URL = "http://127.0.0.1:8000";
+const BACKEND_BASE_URL = "https://crud-django-1-hsld.onrender.com";
+const API_URL = `${BACKEND_BASE_URL}/api/profiles/`;
 
 export interface ProfileStats {
   total: number;
