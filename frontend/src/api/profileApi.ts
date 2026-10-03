@@ -120,6 +120,50 @@ const toBackendPayload = (profile: ProfileFormData) => ({
   status: toBackendStatus(profile.status),
 });
 
+const buildProfileRequest = async (
+  profile: ProfileFormData,
+): Promise<{ headers: HeadersInit; body: BodyInit }> => {
+  const payload = toBackendPayload(profile);
+  const savedImagePrefix = `${BACKEND_BASE_URL}/media/`;
+
+  if (profile.avatarUrl && !profile.avatarUrl.startsWith(savedImagePrefix)) {
+    const imageResponse = await fetch(profile.avatarUrl);
+    if (!imageResponse.ok) {
+      throw new Error("Unable to read the selected profile image.");
+    }
+
+    const image = await imageResponse.blob();
+    const extension =
+      image.type === "image/jpeg"
+        ? "jpg"
+        : image.type === "image/webp"
+          ? "webp"
+          : "png";
+    const body = new FormData();
+
+    Object.entries(payload).forEach(([key, value]) => {
+      body.append(key, String(value));
+    });
+    body.append("profile_image", image, `profile-image.${extension}`);
+
+    return {
+      headers: { Accept: "application/json" },
+      body,
+    };
+  }
+
+  return {
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({
+      ...payload,
+      ...(profile.avatarUrl ? {} : { profile_image: null }),
+    }),
+  };
+};
+
 export const fetchProfiles = async (): Promise<UserProfile[]> => {
   const response = await fetch(API_URL, {
     headers: {
@@ -156,13 +200,10 @@ export const fetchProfileStats = async (): Promise<ProfileStats> => {
 export const createProfile = async (
   profile: ProfileFormData,
 ): Promise<UserProfile> => {
+  const request = await buildProfileRequest(profile);
   const response = await fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(toBackendPayload(profile)),
+    ...request,
   });
 
   if (!response.ok) {
@@ -178,13 +219,10 @@ export const updateProfile = async (
   id: string | number,
   profile: ProfileFormData,
 ): Promise<UserProfile> => {
+  const request = await buildProfileRequest(profile);
   const response = await fetch(`${API_URL}${id}/`, {
     method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(toBackendPayload(profile)),
+    ...request,
   });
 
   if (!response.ok) {
