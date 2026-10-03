@@ -75,6 +75,9 @@ CORS_ALLOWED_ORIGINS = [
     ).split(",")
     if origin.strip()
 ]
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://[a-z0-9-]+\.vercel\.app$",
+]
 
 ROOT_URLCONF = 'backend.urls'
 
